@@ -1,0 +1,43 @@
+name: 想法(GPUKernelContest)
+description: 对本赛题提出一个想法或建议
+title: "[idea]: "
+labels: ["idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢提出想法建议，我们将仔细考虑！
+  - type: textarea
+    id: related-problem
+    attributes:
+      label: 你的想法建议是否和某个问题相关？
+      description: 清晰并简洁地描述想法是什么，例如，当我...时，总是想GPUKernelContest可以通过XX的事情，达成XX的目标。
+    validations:
+      required: false
+  - type: textarea
+    id: desired-solution
+    attributes:
+      label: 你希望GPUKernelContest有什么样的进展？
+      description: 清晰并简洁地描述你希望看到的内容或者进展。
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 你考虑过有哪些GPUKernelContest可以给开源做的事情？
+      description: 清晰并简洁地描述你考虑过的任何GPUKernelContest可以给开源做的事情。
+    validations:
+      required: false
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 你有其他相关背景的信息吗？
+      description: 在此处添加有关想法的任何其他上下文或截图。
+    validations:
+      required: false
+  - type: checkboxes
+    attributes:
+      label: 意向参与贡献
+      options:
+        - label: 我有意向参与GPUKernelContest建设，并成为贡献者。
+          required: false
