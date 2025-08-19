@@ -5,7 +5,7 @@
 ## 1. Fork项目仓库
 - **目的**：将原始仓库复制到您的Gitee（或github）账户下，以便您可以进行修改。
 - **步骤**：
-  - 在Gitee（或github）上找到[GPUKernelContest](https://gitee.com/giteeuseid/GPUKernelContest)。
+  - 在Gitee（或github）上找到[GPUKernelContest](https://gitee.com/ccf-ai-infra/GPUKernelContest)。
   - 点击页面右上角的“Fork”按钮，将该仓库复制到您的Gitee账户下。
 
 ## 2. Clone项目仓库
@@ -13,7 +13,7 @@
 - **步骤**：
   - 在您的本地机器上，使用`git clone`命令将项目仓库Fork的仓库克隆到本地。
     ```sh
-    git clone https://gitee.com/ccf-ai-infra/GPUKernelContest.git
+    git clone https://gitee.com/giteeuseid/GPUKernelContest.git
     ```
     备注：`giteeuseid替换您的url`。
 
