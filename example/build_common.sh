@@ -33,7 +33,7 @@ COMPILER=${COMPILER:-mxcc}
 #COMPILER_FLAGS=${COMPILER_FLAGS:--O3 -std=c++17 --extended-lambda} # not run all test for easy debug
 COMPILER_FLAGS=${COMPILER_FLAGS:--O3 -std=c++17 --extended-lambda -DRUN_FULL_TEST} 
 
-INCLUDE_DIR=${INCLUDE_DIR:-}
+INCLUDE_DIR=${INCLUDE_DIR:-cp_template}
 BUILD_DIR=${BUILD_DIR:-build}
 
 # 编译单个算法的通用函数
@@ -49,7 +49,7 @@ compile_algorithm() {
     mkdir -p "$BUILD_DIR"
     
     # 编译命令
-    local compile_cmd="$COMPILER $COMPILER_FLAGS -I$INCLUDE_DIR $source_file -o $target_file"
+    local compile_cmd="$COMPILER $COMPILER_FLAGS -I$INCLUDE_DIR cp_template/$source_file -o $target_file"
     
     print_info "执行: $compile_cmd"
     
