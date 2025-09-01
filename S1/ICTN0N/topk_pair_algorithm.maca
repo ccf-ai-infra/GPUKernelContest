@@ -1,0 +1,317 @@
+#include "test_utils.h"
+#include "performance_utils.h"
+#include "yaml_reporter.h"
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <fstream>
+#include <map>
+#include <chrono>
+
+// ============================================================================
+// 实现标记宏 - 参赛者修改实现时请将此宏设为0
+// ============================================================================
+#ifndef USE_DEFAULT_REF_IMPL
+#define USE_DEFAULT_REF_IMPL 1  // 1=默认实现, 0=参赛者自定义实现
+#endif
+
+#if USE_DEFAULT_REF_IMPL
+#include <thrust/sort.h>
+#include <thrust/device_vector.h>
+#include <thrust/execution_policy.h>
+#include <thrust/iterator/zip_iterator.h>
+#include <thrust/tuple.h>
+#include <thrust/copy.h>
+#endif
+
+static const int TOPK_VALUES[] = {32, 50, 100, 256, 1024};
+static const int NUM_TOPK_VALUES = sizeof(TOPK_VALUES) / sizeof(TOPK_VALUES[0]);
+
+// ============================================================================
+// TopkPair算法实现接口
+// 参赛者需要替换Thrust实现为自己的高性能kernel
+// ============================================================================
+
+template <typename KeyType, typename ValueType>
+class TopkPairAlgorithm {
+public:
+    // 主要接口函数 - 参赛者需要实现这个函数
+    void topk(const KeyType* d_keys_in, KeyType* d_keys_out,
+              const ValueType* d_values_in, ValueType* d_values_out,
+              int num_items, int k, bool descending) {
+        
+#if !USE_DEFAULT_REF_IMPL
+        // ========================================
+        // 参赛者自定义实现区域
+        // ========================================
+        
+        // TODO: 参赛者在此实现自己的高性能TopK算法
+        
+        // 示例：参赛者可以调用多个自定义kernel
+        // TopkKernel1<<<grid, block>>>(d_keys_in, d_values_in, temp_results, num_items, k);
+        // TopkKernel2<<<grid, block>>>(temp_results, d_keys_out, d_values_out, k, descending);
+#else
+        // ========================================
+        // 默认基准实现
+        // ========================================
+        
+        KeyType* temp_keys;
+        ValueType* temp_values;
+        MACA_CHECK(mcMalloc(&temp_keys, num_items * sizeof(KeyType)));
+        MACA_CHECK(mcMalloc(&temp_values, num_items * sizeof(ValueType)));
+        
+        MACA_CHECK(mcMemcpy(temp_keys, d_keys_in, num_items * sizeof(KeyType), mcMemcpyDeviceToDevice));
+        MACA_CHECK(mcMemcpy(temp_values, d_values_in, num_items * sizeof(ValueType), mcMemcpyDeviceToDevice));
+        
+        auto key_ptr = thrust::device_pointer_cast(temp_keys);
+        auto value_ptr = thrust::device_pointer_cast(temp_values);
+        
+        // 由于greater和less是不同类型，需要分别调用
+        if (descending) {
+            thrust::stable_sort_by_key(thrust::device, key_ptr, key_ptr + num_items, value_ptr, thrust::greater<KeyType>());
+        } else {
+            thrust::stable_sort_by_key(thrust::device, key_ptr, key_ptr + num_items, value_ptr, thrust::less<KeyType>());
+        }
+
+        MACA_CHECK(mcMemcpy(d_keys_out, temp_keys, k * sizeof(KeyType), mcMemcpyDeviceToDevice));
+        MACA_CHECK(mcMemcpy(d_values_out, temp_values, k * sizeof(ValueType), mcMemcpyDeviceToDevice));
+
+        mcFree(temp_keys);
+        mcFree(temp_values);
+#endif
+    }
+    
+    // 获取当前实现状态
+    static const char* getImplementationStatus() {
+#if USE_DEFAULT_REF_IMPL
+        return "DEFAULT_REF_IMPL";
+#else
+        return "CUSTOM_IMPL";
+#endif
+    }
+    
+private:
+    // 参赛者可以在这里添加辅助函数和成员变量
+    // 例如：分块大小、临时缓冲区、多流处理等
+};
+
+// ============================================================================
+// 测试和性能评估
+// ============================================================================
+
+bool testCorrectness() {
+    std::cout << "TopkPair 正确性测试..." << std::endl;
+    TestDataGenerator generator;
+    TopkPairAlgorithm<float, uint32_t> algorithm;
+    
+    int size = 10000;
+    auto keys = generator.generateRandomFloats(size);
+    auto values = generator.generateRandomUint32(size);
+    
+    // 分配GPU内存
+    float *d_keys_in, *d_keys_out;
+    uint32_t *d_values_in, *d_values_out;
+    
+    MACA_CHECK(mcMalloc(&d_keys_in, size * sizeof(float)));
+    MACA_CHECK(mcMalloc(&d_values_in, size * sizeof(uint32_t)));
+    
+    MACA_CHECK(mcMemcpy(d_keys_in, keys.data(), size * sizeof(float), mcMemcpyHostToDevice));
+    MACA_CHECK(mcMemcpy(d_values_in, values.data(), size * sizeof(uint32_t), mcMemcpyHostToDevice));
+    
+    bool allPassed = true;
+    
+    // 测试不同k值
+    for (int ki = 0; ki < NUM_TOPK_VALUES && ki < 4; ki++) { // 限制测试范围
+        int k = TOPK_VALUES[ki];
+        if (k > size) continue;
+        
+        std::cout << "  测试 k=" << k << std::endl;
+        
+        MACA_CHECK(mcMalloc(&d_keys_out, k * sizeof(float)));
+        MACA_CHECK(mcMalloc(&d_values_out, k * sizeof(uint32_t)));
+        
+        for (bool descending : {false, true}) {
+            std::cout << "    " << (descending ? "降序" : "升序") << " TopK..." << std::endl;
+            
+            // CPU参考结果
+            std::vector<float> cpu_keys_out;
+            std::vector<uint32_t> cpu_values_out;
+            cpuTopkPair(keys, values, cpu_keys_out, cpu_values_out, k, descending);
+            
+            // GPU算法结果
+            algorithm.topk(d_keys_in, d_keys_out, d_values_in, d_values_out, size, k, descending);
+            
+            // 获取结果
+            std::vector<float> gpu_keys_out(k);
+            std::vector<uint32_t> gpu_values_out(k);
+            MACA_CHECK(mcMemcpy(gpu_keys_out.data(), d_keys_out, k * sizeof(float), mcMemcpyDeviceToHost));
+            MACA_CHECK(mcMemcpy(gpu_values_out.data(), d_values_out, k * sizeof(uint32_t), mcMemcpyDeviceToHost));
+            
+            // 验证结果
+            bool keysMatch = compareArrays(cpu_keys_out, gpu_keys_out, 1e-5);
+            bool valuesMatch = compareArrays(cpu_values_out, gpu_values_out);
+            
+            if (!keysMatch || !valuesMatch) {
+                std::cout << "    失败: 结果不匹配" << std::endl;
+                allPassed = false;
+            } else {
+                std::cout << "    通过" << std::endl;
+            }
+        }
+        
+        mcFree(d_keys_out);
+        mcFree(d_values_out);
+    }
+    
+    // 清理内存
+    mcFree(d_keys_in);
+    mcFree(d_values_in);
+    
+    return allPassed;
+}
+
+void benchmarkPerformance() {
+    std::cout << "\nTopkPair 性能测试..." << std::endl;
+    std::cout << "数据类型: <float, uint32_t>" << std::endl;
+    std::cout << "计算公式:" << std::endl;
+    std::cout << "  吞吐量 = 元素数 / 时间(s) / 1e9 (G/s)" << std::endl;
+    
+    TestDataGenerator generator;
+    PerformanceMeter meter;
+    TopkPairAlgorithm<float, uint32_t> algorithm;
+    
+    const int WARMUP_ITERATIONS = 5;
+    const int BENCHMARK_ITERATIONS = 10;
+    
+    // 用于YAML报告的数据收集
+    std::vector<std::map<std::string, std::string>> perf_data;
+    
+    // 针对不同数据规模测试
+    for (int size_idx = 0; size_idx < NUM_TEST_SIZES; size_idx++) {
+        int size = TEST_SIZES[size_idx];
+        std::cout << "\n数据规模: " << size << std::endl;
+        std::cout << std::setw(8) << "k值" << std::setw(15) << "升序(ms)" << std::setw(15) << "降序(ms)" 
+                  << std::setw(16) << "升序(G/s)" << std::setw(16) << "降序(G/s)" << std::endl;
+        std::cout << std::string(74, '-') << std::endl;
+        
+        auto keys = generator.generateRandomFloats(size);
+        auto values = generator.generateRandomUint32(size);
+        
+        // 分配GPU内存
+        float *d_keys_in;
+        uint32_t *d_values_in;
+        
+        MACA_CHECK(mcMalloc(&d_keys_in, size * sizeof(float)));
+        MACA_CHECK(mcMalloc(&d_values_in, size * sizeof(uint32_t)));
+        
+        MACA_CHECK(mcMemcpy(d_keys_in, keys.data(), size * sizeof(float), mcMemcpyHostToDevice));
+        MACA_CHECK(mcMemcpy(d_values_in, values.data(), size * sizeof(uint32_t), mcMemcpyHostToDevice));
+        
+        for (int ki = 0; ki < NUM_TOPK_VALUES; ki++) {
+            int k = TOPK_VALUES[ki];
+            if (k > size) continue;
+            
+            float *d_keys_out;
+            uint32_t *d_values_out;
+            MACA_CHECK(mcMalloc(&d_keys_out, k * sizeof(float)));
+            MACA_CHECK(mcMalloc(&d_values_out, k * sizeof(uint32_t)));
+            
+            float asc_time = 0, desc_time = 0;
+            
+            for (bool descending : {false, true}) {
+                // Warmup阶段
+                for (int iter = 0; iter < WARMUP_ITERATIONS; iter++) {
+                    algorithm.topk(d_keys_in, d_keys_out, d_values_in, d_values_out, size, k, descending);
+                }
+                
+                // 正式测试阶段
+                float total_time = 0;
+                for (int iter = 0; iter < BENCHMARK_ITERATIONS; iter++) {
+                    meter.startTiming();
+                    algorithm.topk(d_keys_in, d_keys_out, d_values_in, d_values_out, size, k, descending);
+                    total_time += meter.stopTiming();
+                }
+                
+                float avg_time = total_time / BENCHMARK_ITERATIONS;
+                if (descending) {
+                    desc_time = avg_time;
+                } else {
+                    asc_time = avg_time;
+                }
+            }
+            
+            // 计算性能指标
+            auto asc_metrics = PerformanceCalculator::calculateTopkPair(size, k, asc_time);
+            auto desc_metrics = PerformanceCalculator::calculateTopkPair(size, k, desc_time);
+            
+            // 显示性能数据
+            PerformanceDisplay::printTopkPairData(k, asc_time, desc_time, asc_metrics, desc_metrics);
+            
+            // 收集YAML报告数据
+            auto entry = YAMLPerformanceReporter::createEntry();
+            entry["data_size"] = std::to_string(size);
+            entry["k_value"] = std::to_string(k);
+            entry["asc_time_ms"] = std::to_string(asc_time);
+            entry["desc_time_ms"] = std::to_string(desc_time);
+            entry["asc_throughput_gps"] = std::to_string(asc_metrics.throughput_gps);
+            entry["desc_throughput_gps"] = std::to_string(desc_metrics.throughput_gps);
+            entry["key_type"] = "float";
+            entry["value_type"] = "uint32_t";
+            perf_data.push_back(entry);
+
+            mcFree(d_keys_out);
+            mcFree(d_values_out);
+        }
+        
+        mcFree(d_keys_in);
+        mcFree(d_values_in);
+    }
+    
+    // 生成YAML性能报告
+    YAMLPerformanceReporter::generateTopkPairYAML(perf_data, "topk_pair_performance.yaml");
+    PerformanceDisplay::printSavedMessage("topk_pair_performance.yaml");
+}
+
+// ============================================================================
+// 主函数
+// ============================================================================
+int main(int argc, char* argv[]) {
+    std::cout << "=== TopkPair 算法测试 ===" << std::endl;
+    
+    // 检查参数
+    std::string mode = "all";
+    if (argc > 1) {
+        mode = argv[1];
+    }
+    
+    bool correctness_passed = true;
+    bool performance_completed = true;
+    
+    try {
+        if (mode == "correctness" || mode == "all") {
+            correctness_passed = testCorrectness();
+        }
+        
+        if (mode == "performance" || mode == "all") {
+            if (correctness_passed || mode == "performance") {
+                benchmarkPerformance();
+            } else {
+                std::cout << "跳过性能测试，因为正确性测试未通过" << std::endl;
+                performance_completed = false;
+            }
+        }
+        
+        std::cout << "\n=== 测试完成 ===" << std::endl;
+        std::cout << "实现状态: " << TopkPairAlgorithm<float, uint32_t>::getImplementationStatus() << std::endl;
+        if (mode == "all") {
+            std::cout << "正确性: " << (correctness_passed ? "通过" : "失败") << std::endl;
+            std::cout << "性能测试: " << (performance_completed ? "完成" : "跳过") << std::endl;
+        }
+        
+        return correctness_passed ? 0 : 1;
+        
+    } catch (const std::exception& e) {
+        std::cerr << "测试出错: " << e.what() << std::endl;
+        return 1;
+    }
+}
