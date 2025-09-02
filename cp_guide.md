@@ -51,9 +51,9 @@
 
 ### 实现位置
 参赛者需要在以下文件中替换Thrust实现：
-- `src/reduce_sum_algorithm.maca` - 替换Thrust归约求和
-- `src/sort_pair_algorithm.maca` - 替换Thrust稳定排序
-- `src/topk_pair_algorithm.maca` - 替换Thrust TopK选择
+- `reduce_sum_algorithm.maca` - 替换Thrust归约求和
+- `sort_pair_algorithm.maca` - 替换Thrust稳定排序
+- `topk_pair_algorithm.maca` - 替换Thrust TopK选择
 
 ### 算法要求
 见competition_parallel_algorithms.md
