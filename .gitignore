@@ -1,0 +1,6 @@
+.DS_Store
+*.bak
+*.pyc
+*.o
+*/build/
+cp_template/*.yaml

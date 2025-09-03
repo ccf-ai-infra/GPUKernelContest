@@ -36,11 +36,11 @@ COMPILER=${COMPILER:-mxcc}
 COMPILER_FLAGS=${COMPILER_FLAGS:-"-O3 -std=c++17 --extended-lambda -DRUN_FULL_TEST"} 
 
 # ***** 这里是关键修改点1：头文件目录 *****
-# 现在头文件在 includes/ 目录下
+# 现在头文件在 utils/ 目录下
 HEADER_DIR=${HEADER_DIR:-utils} 
 
 # ***** 这里是关键修改点2：源文件目录 *****
-# 现在源文件在 algorithms/ 目录下
+# 现在源文件在 ./ 目录下
 SOURCE_CODE_DIR=${SOURCE_CODE_DIR:-} 
 
 BUILD_DIR=${BUILD_DIR:-build}
