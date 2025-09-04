@@ -1,0 +1,46 @@
+# SortPair算法性能测试结果
+# 生成时间: 2025-09-03 22:37:18
+
+algorithm: "SortPair"
+data_types:
+  key_type: "float"
+  value_type: "uint32_t"
+formulas:
+  throughput: "elements / time(s) / 1e9 (G/s)"
+performance_data:
+  - data_size: 1000000
+    ascending:
+      time_ms: 0.351488
+      throughput_gps: 2.845047
+    descending:
+      time_ms: 0.343270
+      throughput_gps: 2.913155
+    key_type: "float"
+    value_type: "uint32_t"
+  - data_size: 134217728
+    ascending:
+      time_ms: 22.273815
+      throughput_gps: 6.025808
+    descending:
+      time_ms: 22.494003
+      throughput_gps: 5.966823
+    key_type: "float"
+    value_type: "uint32_t"
+  - data_size: 536870912
+    ascending:
+      time_ms: 88.856277
+      throughput_gps: 6.042014
+    descending:
+      time_ms: 89.913918
+      throughput_gps: 5.970943
+    key_type: "float"
+    value_type: "uint32_t"
+  - data_size: 1073741824
+    ascending:
+      time_ms: 181.409576
+      throughput_gps: 5.918882
+    descending:
+      time_ms: 183.428955
+      throughput_gps: 5.853720
+    key_type: "float"
+    value_type: "uint32_t"

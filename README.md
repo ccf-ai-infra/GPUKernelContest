@@ -32,10 +32,70 @@
 
 ---
 
-## 📥 如何参与提交？
+## 🚀 快速上手
+
+本竞赛旨在评估参赛者在GPU并行计算领域的算法优化能力。为了快速让参赛者进入比赛状态，我们提供了三个核心算法的高性能版本参考，供参赛选手不断优化性能：
+- **ReduceSum**: 高精度归约求和
+- **SortPair**: 键值对稳定排序
+- **TopkPair**: 键值对TopK选择
+
+[三个核心算法赛题模板](./cp_template/)
+
+### 📥 选手赛题准备
+
+1. 点击[创建赛题](https://gitee.com/ccf-ai-infra/GPUKernelContest/issues/new?template=cp.yml)
+2. 记录赛题的ID，例如：[ICTN0N](https://gitee.com/ccf-ai-infra/GPUKernelContest/issues/ICTN0N)
+3. Fork仓库并初始化比赛环境(三个核心算法题优化赛题以外自定义的赛题需有入口run.sh脚本，供CI自动测试验证)
+   1. 拷贝赛题样例`cp_template`到赛题`ICTN0N`目录
+        ```
+        ├── S1(说明：第一季比赛名)
+        │   ├── ICTN0N(说明：以赛题ID命名目录存放赛题的PR)
+        |   |   ├── utils
+        │   |   ├── run.sh（说明：作为CI自动测试验证的入口）
+        |   |   └── ……
+        │   └── ……
+        └── S2（说明：第二季比赛名）
+            └── 赛题目录1
+            └── 赛题目录2
+        ```
+
+### 编译和测试
+
+选手赛题目录内提供了编译、测试的脚本，供选手熟悉比赛环境，步骤如下：
+
+```bash
+# ！！！注意参赛选手需要根据自己的赛题ID进入自己初始化的目录！！！！
+cd GPUKernelContest/S1/ICTN0N
+```
+
+
+#### 1. 全量编译和运行
+```bash
+# 编译并运行所有算法测试（默认行为）
+./run.sh
+
+# 编译并运行单个算法测试
+./run.sh --run_reduce   # ReduceSum算法
+./run.sh --run_sort     # SortPair算法
+./run.sh --run_topk     # TopkPair算法
+```
+
+#### 2. 手动运行测试
+
+```bash
+# 仅编译所有算法，不运行测试
+./run.sh --build-only
+
+# 单个运行不同算法的测试
+./build/test_reducesum [correctness|performance|all]
+./build/test_sortpair [correctness|performance|all]
+./build/test_topkpair [correctness|performance|all]
+```
+
+对于如何提交可参考：[如何贡献](how-to-contribute.md)
 
 ### ✅ 参赛要求：
-- 提交内容必须可以在沐曦自研 GPU **曦云 C500** 上运行。
+- 提交内容必须可以在MACA软件上运行。
 - 所提交的优化代码将由主办方审核，**需成功合并（Merge）到官方 Gitee 仓库，才算有效提交。**
 
 ### 📦 提交内容包含：
@@ -47,7 +107,7 @@
 
 ## 📈 评分机制
 
-每次提交会按以下规则评分：
+每次合并的提交会按以下规则评分：
 
 ### 🎯 基础得分（Level）：
 | 等级 | 内容描述 | 分值 |
@@ -56,7 +116,7 @@
 | Level 2 | 融合优化 2~9 个算子 | 10 分 |
 | Level 3 | 含 MMA（多维矩阵乘）融合算子 | 50 分 |
 | Level 4 | 用于大模型推理的复杂融合算子 | 50 分 |
-| 合并至metax-maca开源项目仓库的每个PR | - | 50 分 |
+| 合并至MACA开源项目仓库的每个PR<需要在赛题提供对应合并的记录，并确保和参赛使用的邮箱一致的提交邮箱> | - | 50 分 |
 
 ### ✨ 加分项：
 | 内容 | 分值 |
@@ -70,18 +130,19 @@
 
 ---
 
-## 🏅 排名规则
+## 🏆 排名机制
 
-- 比赛周期：2 个月  
-- 排名按累计得分排序，取前 12 名！
-
-若得分相同：
-1. 提交次数多者优先
-2. 提交时间早者优先
+1. 评委评分从高到低排序
+2. **评估规则：** 取前 12 名作为最终获奖选手
+3. 若基础得分相同：
+  - 加分项多者优先
+  - 提交数量多者优先
+  - 提交时间早者优先
+4. 当同一参赛选手在本赛题有多个赛题的提交时，多个赛题计算累计得分
 
 ---
 
-## 📚 官方参考项目仓库
+## 📚 参考MACA开源项目仓库
 
 你可以参考以下项目仓库，了解算子开发与提交格式：
 
@@ -89,12 +150,6 @@
 - [mcTVM](https://github.com/MetaX-MACA/mcTVM)
 - [mcEigen](https://github.com/MetaX-MACA/mcEigen)
 - [mcPytorch](https://github.com/MetaX-MACA/mcPytorch)
-
----
-
-## 🖥️ 可用资源
-
-- 曦云 **C500 GPU 1/2卡**，主办方通过算力券的形式发放给报名的同学。
 
 ---
 

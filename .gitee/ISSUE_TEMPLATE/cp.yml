@@ -1,0 +1,36 @@
+name: 赛题(CP)
+description: 参赛题目
+title: "[cp]: "
+labels: ["cp"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你积极参与比赛，并提交自己希望参加的赛题，当出现一样的题目、一样的性能的时候，以谁创建赛题的时间早者优先。
+  - type: textarea
+    id: desired-solution
+    attributes:
+      label: 你提交的赛题的内容介绍
+      description: 清晰并简洁地描述你希望参赛的内容详细的描述，尽量清晰方便他人了解赛题希望达成的目标。
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 赛题有对应的预期结果
+      description: 清晰并简洁地描述赛题完成的预期结果，最佳的方式是知道如何测试验证预期结果的正确性。
+    validations:
+      required: false
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 你有其他相关背景的信息吗？
+      description: 在此处添加有关想法的任何其他上下文或截图。
+    validations:
+      required: false
+  - type: checkboxes
+    attributes:
+      label: 推荐其它选手完成【如选否，请创建后assign赛题给自己】
+      options:
+        - label: 是否希望推荐给别人完成该赛题。
+          required: false

@@ -1,0 +1,26 @@
+# ReduceSum算法性能测试结果
+# 生成时间: 2025-09-04 18:32:03
+
+algorithm: "ReduceSum"
+data_types:
+  input: "float"
+  output: "float"
+formulas:
+  throughput: "elements / time(s) / 1e9 (G/s)"
+performance_data:
+  - data_size: 1000000
+    time_ms: 0.051046
+    throughput_gps: 19.590022
+    data_type: "float"
+  - data_size: 134217728
+    time_ms: 0.405018
+    throughput_gps: 331.387385
+    data_type: "float"
+  - data_size: 536870912
+    time_ms: 1.351834
+    throughput_gps: 397.142754
+    data_type: "float"
+  - data_size: 1073741824
+    time_ms: 2.618675
+    throughput_gps: 410.032451
+    data_type: "float"
