@@ -44,19 +44,35 @@
 ### 📥 选手赛题准备
 
 1. 点击[创建赛题](https://gitee.com/ccf-ai-infra/GPUKernelContest/issues/new?template=cp.yml)
-2. 记录赛题的ID，例如：[ICTN0N](https://gitee.com/ccf-ai-infra/GPUKernelContest/issues/ICTN0N)
+2. 记录赛题的ID，并创建以赛题ID为名称的目录。例如：[ICTN0N](https://gitee.com/ccf-ai-infra/GPUKernelContest/issues/ICTN0N)
+   ```bash
+   # cd GPUKernelContest
+   cd GPUKernelContest
+   # 创建以赛题ID为名称的目录
+   mkdir -p S1/ICTN0N
+   ```
+   ```
+   # 创建后的目录结构如下:
+   GPUKernelContest
+   ├── cp_template(说明：赛目模板目录)
+   ├── S1(说明：第一季比赛名)
+   │   ├── ICTN0N(说明：以自己创建赛题ID命名目录存放自己需要提交的内容)
+   ```
 3. Fork仓库并初始化比赛环境(三个核心算法题优化赛题以外自定义的赛题需有入口run.sh脚本，供CI自动测试验证)
    1. 拷贝赛题样例`cp_template`到赛题`ICTN0N`目录
-        ```
-        ├── S1(说明：第一季比赛名)
-        │   ├── ICTN0N(说明：以赛题ID命名目录存放赛题的PR)
-        |   |   ├── utils
-        │   |   ├── run.sh（说明：作为CI自动测试验证的入口）
-        |   |   └── ……
-        │   └── ……
-        └── S2（说明：第二季比赛名）
-            └── 赛题目录1
-            └── 赛题目录2
+   ```bash
+   # cp -r cp_template/* S1/ICTN0N
+   ```
+   2. 拷贝后的目录结构如下：
+   ```
+   ├── S1(说明：第一季比赛名)
+   │   ├── ICTN0N(说明：以自己创建赛题ID命名目录存放自己需要提交的内容)
+   |   |   ├── utils
+   │   |   ├── run.sh（说明：作为CI自动测试验证的入口）
+   |   |   └── competition_parallel_algorithms.md
+   |   |   └── competition_parallel_algorithms.md
+   |   |   └── competition_parallel_algorithms.md
+   │   └── ……
         ```
 
 ### 编译和测试
