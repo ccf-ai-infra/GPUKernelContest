@@ -4,3 +4,4 @@
 *.o
 */build/
 cp_template/*.yaml
+S1/**/*.yaml
