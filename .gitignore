@@ -2,6 +2,6 @@
 *.bak
 *.pyc
 *.o
-*/build/
+*/**/build/*
 cp_template/*.yaml
 S1/**/*.yaml

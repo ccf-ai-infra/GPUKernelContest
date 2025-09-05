@@ -43,10 +43,16 @@
 
 ### 📥 选手赛题准备
 
-1. 点击[创建赛题](https://gitee.com/ccf-ai-infra/GPUKernelContest/issues/new?template=cp.yml)
-2. 记录赛题的ID，并创建以赛题ID为名称的目录。例如：[ICTN0N](https://gitee.com/ccf-ai-infra/GPUKernelContest/issues/ICTN0N)
+1. 点击[创建赛题](https://gitee.com/ccf-ai-infra/GPUKernelContest/issues/new?template=cp.yml)，并记录赛题的ID
+2. 算力平台启动一个MACA3.0.0.4+PyTorch2.4.0的容器算力,详细步骤参考：[算力平台使用说明](https://ai.gitee.com/docs/compute/container)
+3. 用ssh或者vscode进入容器环境，Clone自己Fork的仓库
    ```bash
-   # cd GPUKernelContest
+   git clone https://gitee.com/giteeuseid/GPUKernelContest.git
+   ```
+   > 备注：`giteeuseid替换您的url`。
+4. 进入参赛项目，创建以赛题ID为名称的目录。例如：[ICTN0N](https://gitee.com/ccf-ai-infra/GPUKernelContest/issues/ICTN0N)
+   ```bash
+   # 进入Clone的仓库
    cd GPUKernelContest
    # 创建以赛题ID为名称的目录
    mkdir -p S1/ICTN0N
@@ -58,7 +64,7 @@
    ├── S1(说明：第一季比赛名)
    │   ├── ICTN0N(说明：以自己创建赛题ID命名目录存放自己需要提交的内容)
    ```
-3. Fork仓库并初始化比赛环境(三个核心算法题优化赛题以外自定义的赛题需有入口run.sh脚本，供CI自动测试验证)
+4. Fork仓库并初始化比赛环境(三个核心算法题优化赛题以外自定义的赛题需有入口run.sh脚本，供CI自动测试验证)
    1. 拷贝赛题样例`cp_template`到赛题`ICTN0N`目录
    ```bash
    # cp -r cp_template/* S1/ICTN0N
@@ -68,10 +74,10 @@
    ├── S1(说明：第一季比赛名)
    │   ├── ICTN0N(说明：以自己创建赛题ID命名目录存放自己需要提交的内容)
    |   |   ├── utils
+   │   |   ├── reduce_sum_algorithm.maca
    │   |   ├── run.sh（说明：作为CI自动测试验证的入口）
-   |   |   └── competition_parallel_algorithms.md
-   |   |   └── competition_parallel_algorithms.md
-   |   |   └── competition_parallel_algorithms.md
+   |   |   └── sort_pair_algorithm.maca
+   |   |   └── topk_pair_algorithm.maca
    │   └── ……
         ```
 
@@ -80,27 +86,35 @@
 选手赛题目录内提供了编译、测试的脚本，供选手熟悉比赛环境，步骤如下：
 
 ```bash
-# ！！！注意参赛选手需要根据自己的赛题ID进入自己初始化的目录！！！！
-cd GPUKernelContest/S1/ICTN0N
+# ！！！注意参赛选手需要根据自己的赛题ID进入自己完成题目的目录！！！！
+cd S1/ICTN0N
 ```
 
+#### 1. 编译和运行
 
-#### 1. 全量编译和运行
+编译并运行所有算法测试（默认行为），如下：
 ```bash
-# 编译并运行所有算法测试（默认行为）
 ./run.sh
+```
 
-# 编译并运行单个算法测试
-./run.sh --run_reduce   # ReduceSum算法
-./run.sh --run_sort     # SortPair算法
-./run.sh --run_topk     # TopkPair算法
+单个或几个赛题测试验证，修改`run.sh`脚本，详细如下：
+```bash
+#!/bin/bash
+
+# 单个赛题测试验证(ReduceSum算法)
+./build_and_run.sh --run_reduce
+```
+
+编译运行单个ReduceSum测试如下：
+```bash
+./run.sh  # ReduceSum算法
 ```
 
 #### 2. 手动运行测试
 
 ```bash
 # 仅编译所有算法，不运行测试
-./run.sh --build-only
+./build_and_run.sh --build-only
 
 # 单个运行不同算法的测试
 ./build/test_reducesum [correctness|performance|all]
@@ -132,7 +146,9 @@ cd GPUKernelContest/S1/ICTN0N
 | Level 2 | 融合优化 2~9 个算子 | 10 分 |
 | Level 3 | 含 MMA（多维矩阵乘）融合算子 | 50 分 |
 | Level 4 | 用于大模型推理的复杂融合算子 | 50 分 |
-| 合并至MACA开源项目仓库的每个PR<需要在赛题提供对应合并的记录，并确保和参赛使用的邮箱一致的提交邮箱> | - | 50 分 |
+| 合并至MACA开源项目仓库的每个PR | 参考：[mcTVM](https://github.com/metax-maca/mcTVM) | 50 分 |
+
+> 注释事项，非AI Infra组下的项目PR需在赛题Iusse中提供合并记录，并确保和参赛时使用邮箱一致的提交邮箱方为有效。
 
 ### ✨ 加分项：
 | 内容 | 分值 |
@@ -162,8 +178,8 @@ cd GPUKernelContest/S1/ICTN0N
 
 你可以参考以下项目仓库，了解算子开发与提交格式：
 
-- [FlashMLA](https://github.com/MetaX-MACA/FlashMLA)
 - [mcTVM](https://github.com/MetaX-MACA/mcTVM)
+- [FlashMLA](https://github.com/MetaX-MACA/FlashMLA)
 - [mcEigen](https://github.com/MetaX-MACA/mcEigen)
 - [mcPytorch](https://github.com/MetaX-MACA/mcPytorch)
 
