@@ -21,10 +21,8 @@
 
 本次挑战主要有两个技术方向：
 
-### 1. Test Time Scaling 算子优化  
+### Test Time Scaling 算子优化  
 - 对深度学习框架中的基础算子（如 PyTorch 或 PaddlePaddle 中的矩阵乘法）进行性能优化。
-
-### 2. Gemm 内核极致优化  
 - **GEMM（General Matrix Multiplication）** 是大模型中的核心计算操作。  
 - 目标是对其内核（Kernel）进行精细调优，提高执行效率。
 
