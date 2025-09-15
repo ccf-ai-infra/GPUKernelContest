@@ -41,19 +41,19 @@
 
 ### 📥 选手赛题准备
 
-1. 点击[创建赛题](https://gitee.com/ccf-ai-infra/GPUKernelContest/issues/new?template=cp.yml)，并记录赛题的ID
+1. 点击[创建赛题](https://gitlink.org.cn/ccf-ai-infra/GPUKernelContest/issues/new），并记录赛题的ID
 2. 算力平台启动一个MACA3.0.0.4+PyTorch2.4.0的容器算力,详细步骤参考：[算力平台使用说明](https://ai.gitee.com/docs/compute/container)
 3. 用ssh或者vscode进入容器环境，Clone自己Fork的仓库
    ```bash
-   git clone https://gitee.com/giteeuseid/GPUKernelContest.git
+   git clone https://gitlink.com/gitlinkuseid/GPUKernelContest.git
    ```
-   > 备注：`giteeuseid替换您的url`。
-4. 进入参赛项目，创建以赛题ID为名称的目录。例如：[ICTN0N](https://gitee.com/ccf-ai-infra/GPUKernelContest/issues/ICTN0N)
+   > 备注：`gitlinkuseid替换您的url`。
+4. 进入参赛项目，创建以赛题ID为名称的目录。例如：[3](https://gitlink.org.cn/ccf-ai-infra/GPUKernelContest/issues/3)
    ```bash
    # 进入Clone的仓库
    cd GPUKernelContest
    # 创建以赛题ID为名称的目录
-   mkdir -p S1/ICTN0N
+   mkdir -p S1/3
    ```
    ```
    # 创建后的目录结构如下:
@@ -63,14 +63,14 @@
    │   ├── ICTN0N(说明：以自己创建赛题ID命名目录存放自己需要提交的内容)
    ```
 4. Fork仓库并初始化比赛环境(三个核心算法题优化赛题以外自定义的赛题需有入口run.sh脚本，供CI自动测试验证)
-   1. 拷贝赛题样例`cp_template`到赛题`ICTN0N`目录
+   1. 拷贝赛题样例`cp_template`到赛题`3`目录
    ```bash
-   # cp -r cp_template/* S1/ICTN0N
+   # cp -r cp_template/* S1/3
    ```
    2. 拷贝后的目录结构如下：
    ```
    ├── S1(说明：第一季比赛名)
-   │   ├── ICTN0N(说明：以自己创建赛题ID命名目录存放自己需要提交的内容)
+   │   ├── 3(说明：以自己创建赛题ID命名目录存放自己需要提交的内容)
    |   |   ├── utils
    │   |   ├── reduce_sum_algorithm.maca
    │   |   ├── run.sh（说明：作为CI自动测试验证的入口）
@@ -85,7 +85,7 @@
 
 ```bash
 # ！！！注意参赛选手需要根据自己的赛题ID进入自己完成题目的目录！！！！
-cd S1/ICTN0N
+cd S1/3
 ```
 
 #### 1. 编译和运行
@@ -124,7 +124,7 @@ cd S1/ICTN0N
 
 ### ✅ 参赛要求：
 - 提交内容必须可以在MACA软件上运行。
-- 所提交的优化代码将由主办方审核，**需成功合并（Merge）到官方 Gitee 仓库，才算有效提交。**
+- 所提交的优化代码将由主办方审核，**需成功合并（Merge）到赛事官方仓库，才算有效提交。**
 
 ### 📦 提交内容包含：
 - 算子优化后的代码
