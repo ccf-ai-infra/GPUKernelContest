@@ -41,8 +41,8 @@
 
 ### 📥 选手赛题准备
 
-1. 点击[创建赛题](https://gitlink.org.cn/ccf-ai-infra/GPUKernelContest/issues/new)，并记录赛题的ID
-2. 算力平台启动一个MACA3.0.0.4+PyTorch2.4.0的容器算力,详细步骤参考：**[算力平台使用说明](https://ai.gitee.com/docs/compute/container)**
+1. 点击 **[创建赛题](https://gitlink.org.cn/ccf-ai-infra/GPUKernelContest/issues/new)** ，并记录赛题的ID
+2. 算力平台启动一个MACA3.0.0.4+PyTorch2.4.0的容器算力,详细步骤参考： **[算力平台使用说明](https://ai.gitee.com/docs/compute/container)**
 3. 用ssh或者vscode进入容器环境，Clone自己Fork的仓库
    ```bash
    git clone https://gitlink.com/gitlinkuseid/GPUKernelContest.git
