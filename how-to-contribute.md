@@ -18,7 +18,7 @@
 - **步骤**：
   - 在您的本地机器上，使用`git clone`命令将项目仓库Fork的仓库克隆到本地。
     ```sh
-    git clone https://gitlink.com/gitlinkuseid/GPUKernelContest.git
+    git clone https://gitlink.org.cn/gitlinkuseid/GPUKernelContest.git
     ```
     备注：`gitlinkuseid替换您的url`。
 
