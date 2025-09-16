@@ -2,7 +2,7 @@
 
 本项目协作采用标准的Pull Request（PR）流程机制，PR流程是开源项目协作和代码管理的核心机制。以下是创建和处理PR的详细步骤：
 
-## 0.CLA签署
+## 0. CLA签署
 - **目的**：项目内Pull Request需要贡献者签署贡献者协议后方可合并，为保证后续项目的顺利，建议提前进行CLA签署。
 -**步骤**：
 -点击[CLA签署链接](https://www.gitlink.org.cn/ccf-ai-infra/cla/governance)，滑动阅读后在页面下方填写真实姓名，并选择参赛所用账号的邮箱即可
