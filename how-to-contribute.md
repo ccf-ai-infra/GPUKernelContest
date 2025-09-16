@@ -6,6 +6,7 @@
 - **目的**：项目内Pull Request需要贡献者签署贡献者协议后方可合并，为保证后续项目的顺利，建议提前进行CLA签署。
 -**步骤**：
 -点击[CLA签署链接](https://www.gitlink.org.cn/ccf-ai-infra/cla/governance)，滑动阅读后在页面下方填写真实姓名，并选择参赛所用账号的邮箱即可
+             
 ## 1. Fork项目仓库
 - **目的**：将原始仓库复制到您的Gitlink（或github）账户下，以便您可以进行修改。
 - **步骤**：
