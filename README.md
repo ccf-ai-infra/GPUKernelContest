@@ -37,7 +37,7 @@
 - **SortPair**: 键值对稳定排序
 - **TopkPair**: 键值对TopK选择
 
-[三个核心算法赛题模板](./cp_template/)
+[三个核心算法赛题模板](https://gitlink.org.cn/ccf-ai-infra/GPUKernelContest/tree/main/cp_template)
 
 ### 📥 选手赛题准备
 
@@ -120,7 +120,7 @@ cd S1/3
 ./build/test_topkpair [correctness|performance|all]
 ```
 
-对于如何提交可参考：[如何贡献](how-to-contribute.md)
+对于如何提交可参考：[如何贡献](https://gitlink.org.cn/ccf-ai-infra/GPUKernelContest/tree/main/how-to-contribute.md)
 
 ### ✅ 参赛要求：
 - 提交内容必须可以在MACA软件上运行。
