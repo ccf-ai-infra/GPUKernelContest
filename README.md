@@ -144,9 +144,9 @@ cd S1/3
 | Level 2 | 融合优化 2~9 个算子 | 10 分 |
 | Level 3 | 含 MMA（多维矩阵乘）融合算子 | 50 分 |
 | Level 4 | 用于大模型推理的复杂融合算子 | 50 分 |
-| 合并至MACA开源项目仓库的每个PR | 参考：[mcTVM](https://github.com/metax-maca/mcTVM) | 50 分 |
+| 合并至MACA开源项目仓库的每个PR | 参考：[mcTVM](https://github.com/metax-maca/mcTVM),[mcTileLang](https://gitee.com/metax-maca/mcTileLang) | 50 分 |
 
-> 注释事项，非AI Infra组下的项目PR需在赛题Iusse中提供合并记录，并确保和参赛时使用邮箱一致的提交邮箱方为有效。
+> 注释事项，非AI Infra组下的项目PR需在赛题Issue中提供合并记录，并确保和参赛时使用邮箱一致的提交邮箱方为有效。
 
 ### ✨ 加分项：
 | 内容 | 分值 |
@@ -174,8 +174,8 @@ cd S1/3
 
 ## 📚 参考MACA开源项目仓库
 
-你可以参考以下项目仓库，了解算子开发与提交格式：
-
+你可以参考以下项目仓库，了解算子开发与提交格式,如果为[github](https://github.com/orgs/MetaX-MACA/repositories)，[gitee](https://gitee.com/organizations/metax-maca/projects)仓库里面的项目提出一个好的Issue可以获得算力券的激励。
+如：
 - [mcTVM](https://github.com/MetaX-MACA/mcTVM)
 - [FlashMLA](https://github.com/MetaX-MACA/FlashMLA)
 - [mcEigen](https://github.com/MetaX-MACA/mcEigen)
