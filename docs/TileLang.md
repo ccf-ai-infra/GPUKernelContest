@@ -11,25 +11,57 @@ TileLang作为TileLang社区主导的GPU内核领域专用语言，以“高效�
 
 ### 3. 生态协同：MACA与开源社区的落地支持
 为推动TileLang在国产GPU上的实际应用，MACA（国产高性能GPU代表厂商）与开源社区联合行动：
-- **硬件适配**：MACA AI编译器团队和TileLang社区合作已提前参与该项目，探讨MACAGPU与TileLang的适配（开源仓库：[mcTileLang](https://gitee.com/metax-maca/mcTileLang)），通过MXMACA软件栈实现深度协同，核心算子（如DeepSeek_MLA FullCol）性能达国际主流产品的119.16%，部分场景实现超越；
+- **硬件适配**：MACA AI编译器团队和TileLang社区合作已提前参与该项目，探讨MACAGPU与TileLang的适配（开源仓库：[mcTileLang](https://gitee.com/metax-maca/mcTileLang)），通过MXMACA软件栈实现深度协同，核心算子性能接近国际主流产品。
 - **在线环境搭建**：在模力方舟平台提供预配置的TileLang在线体验环境，开发者无需自行搭建硬件，直接基于曦云C500（64GB显存、Intel Xeon Gold 6530）来进行开发；
 - **资源支持**：提供专属算力券降低体验成本，同时开源完整适配代码与文档，助力生态共建。
 
 ### 4. 项目意义
 本项目通过“语言工具+国产硬件+在线平台”的组合，打破国产GPU生态“硬件强、软件弱”的僵局，为开发者提供“开箱即用”的国产GPU开发方案，推动中国算力产业从“单点突破”转向“生态共荣”，助力智算、通用计算领域的国产化替代与创新发展。
 
+## 二、快速上手：TileLang 国产 GPU 开发实践
+### 1. 环境准备：获取TileLang在线开发资源
+#### 步骤1：进入模力方舟算力市场
+访问[模力方舟](https://ai.gitee.com/compute), 点击顶部导航栏“算力市场”，进入MACAGPU资源租用页面。
 
-## 二、快速上手：TileLang国产GPU开发实践
-### 1. 环境准备：获取TileLang开发资源
-#### 在线体验
-1. 访问模力方舟算力市场：https://ai.gitee.com/compute；
-2. 领取TileLang专属算力券，兑换曦云C500 GPU容器资源；
-3. 选择“TileLang 0.1.5 / Python 3.10”镜像，启动容器。
+#### 步骤2：领取TileLang专属算力券
+- 参与比赛活动，领取TileLang专属算力券；
+- 算力券可直接兑换曦云C系列GPU容器资源，用于TileLang开发体验。
 
-### 2. 进阶探索：更多算子与工具
-- 查看`examples`目录：获取FlashAttention、Dequant GEMM、MLA Decoding等算子示例；
-- 使用调试工具
-- 性能优化
+#### 步骤3：选择TileLang镜像与配置
+- **硬件配置选择**：默认选择“曦云C500”GPU，单卡配置为64GB显存、12核Intel Xeon Gold 6530 CPU
+- **镜像选择**：在“镜像”列表中勾选“基础镜像”下的“TileLang 0.1.5 
+- **计费方式**：支持按量收费、包日/包周/包月。
+
+### 2. 容器启动与TileLang验证
+#### 步骤1：启动GPU容器
+完成配置与算力券兑换后，点击“启动容器”，等待容器初始化（通常耗时1-3分钟，可在“工作台”查看进度）。
+
+#### 步骤2：执行快速验证命令
+容器启动后，通过终端输入以下命令，验证TileLang环境可用性：
+```bash
+# 进入TileLang示例目录
+cd /root/mcTileLang/
+# 运行快速启动示例
+python3 ./examples/quickstart.py
+```
+
+#### 步骤3：确认验证结果
+若终端输出以下信息，说明环境正常：
+- 张量输出（如`tensor([[ -1.4619, -19.9844, ... ]], device='cuda:0', dtype=torch.float16)`）；
+- 匹配提示（`Kernel output matches PyTorch reference`）；
+- 延迟数据（如`Latency:0.11110399663448334 ms`）。
+
+可额外执行`mx-smi`命令，查看曦云C500 GPU状态（如温度、显存占用、功率等），确认硬件资源正常调用。
+
+### 3. 进阶体验：TileLang算子开发
+#### 步骤1：参考官方文档
+访问MACA开源项目文档，获取算子开发教程与API说明。
+
+#### 步骤2：尝试核心算子开发
+基于示例代码修改，开发自定义GPU算子（如简化版GEMM算子））。
+
+#### 步骤3：参与生态贡献
+若开发的算子具备通用性，可通过[gitee](https://gitee.com/metax-maca/mcTileLang)提交PR参与TileLang国产GPU生态共建。
 
 
 ## 三、生态贡献指南：邀您共建TileLang国产GPU生态
@@ -66,8 +98,6 @@ mcTileLang仓库的`docs`（文档）与`examples`（示例）目录是生态核
 
 ## 四、资源汇总
 - 仓库地址：https://gitee.com/metax-maca/mcTileLang
-- 在线体验：https://ai.gitee.com/compute（模力方舟曦云C500环境）
+- 在线体验：https://ai.gitee.com/compute
 - 文档参考：《曦云系列_通用计算GPU_快速上手指南》
 - 社区交流：加入社区参与讨论（仓库README有入口）
-
-
