@@ -42,12 +42,12 @@
 ### 📥 选手赛题准备
 
 1. 点击 **[创建赛题](https://gitlink.org.cn/ccf-ai-infra/GPUKernelContest/issues/new)** ，并记录赛题的ID
-2. 算力平台启动一个MACA3.0.0.4+PyTorch2.4.0的容器算力,详细步骤参考： **[算力平台使用说明](https://ai.gitee.com/docs/compute/container)**
+2. 算力平台启动一个MACA3.0.0.4+PyTorch2.4.0的容器算力，详细步骤参考： **[算力平台使用说明](https://ai.gitee.com/docs/compute/container)**
 3. 用ssh或者vscode进入容器环境，Clone自己Fork的仓库
    ```bash
    git clone https://gitlink.com/gitlinkuseid/GPUKernelContest.git
    ```
-   > 备注：`gitlinkuseid替换您的url`。
+   > 备注：`gitlinkuseid` 替换为您的URL。
 4. 进入参赛项目，创建以赛题ID为名称的目录。例如：[赛题3](https://gitlink.org.cn/ccf-ai-infra/GPUKernelContest/issues/3)
    ```bash
    # 进入Clone的仓库
@@ -62,7 +62,7 @@
    ├── S1(说明：第一季比赛名)
    │   ├── 3(说明：以自己创建赛题ID命名目录存放自己需要提交的内容)
    ```
-4. Fork仓库并初始化比赛环境(三个核心算法题优化赛题以外自定义的赛题需有入口run.sh脚本，供CI自动测试验证)
+4. Fork仓库并初始化比赛环境（三个核心算法题优化赛题以外自定义的赛题需有入口run.sh脚本，供CI自动测试验证）
    1. 拷贝赛题样例`cp_template`到赛题`3`目录
    ```bash
    # cp -r cp_template/* S1/3
@@ -135,15 +135,15 @@ cd S1/3
 
 ## 📈 评分机制
 
-每次合并的提交会按以下规则评分,[mcTileLang](https://gitee.com/metax-maca/mcTileLang)详见[mcTilelang](docs/Tilelang/TileLang.md)：
+每次合并的提交会按以下规则评分，[mcTileLang](https://gitee.com/metax-maca/mcTileLang)详见[mcTileLang](docs/Tilelang/TileLang.md)：
 
 ### 🎯 基础得分（Level）：
 | 等级 | 内容描述 | 分值 |
 |------|----------|------|
-| Level 1 | 优化一个 PyTorch / Paddle 算子/验证[mcTileLang](https://gitee.com/metax-maca/mcTileLang)的docs文件夹下的文档已有的文档并提交验证结果的截图到对应的issue| 5 分 |
-| Level 2 | 融合优化 2~9 个算子/迁移[mcTileLang](https://gitee.com/metax-maca/mcTileLang)的docs文件夹下的文档已有的与cuda相关的文档到maca，并给对应的文档提交PR | 10 分 |
+| Level 1 | 优化一个 PyTorch或Paddle 算子 / 验证[mcTileLang](https://gitee.com/metax-maca/mcTileLang)的docs文件夹下的文档并提交验证结果的截图到对应的issue | 5 分 |
+| Level 2 | 融合优化 2~9 个算子 / 迁移[mcTileLang](https://gitee.com/metax-maca/mcTileLang)的docs文件夹下的文档已有的与CUDA相关的文档到MACA，并给对应的文档提交PR | 10 分 |
 | Level 3 | 为[mcTileLang](https://gitee.com/metax-maca/mcTileLang)的docs/deeplearning_operators文件夹下未编写文档的算子提交算子解读的PR/补充和修复已有文档 | 20 分 |
-| Level 4 | 含 MMA（多维矩阵乘）融合算子/用于大模型推理的复杂融合算子/给开源仓库[mcTileLang](https://gitee.com/metax-maca/mcTileLang)提交example文件夹下的代码PR | 50 分 |
+| Level 4 | 含 MMA（多维矩阵乘）融合算子 / 用于大模型推理的复杂融合算子 / 给开源仓库[mcTileLang](https://gitee.com/metax-maca/mcTileLang)提交example文件夹下的代码PR | 50 分 |
 | 合并至MACA开源项目仓库的每个PR | 参考：[mcTVM](https://github.com/metax-maca/mcTVM),[mcTileLang](https://gitee.com/metax-maca/mcTileLang) | 50 分 |
 
 > 注释事项，非AI Infra组下的项目PR需在赛题Issue中提供合并记录，并确保和参赛时使用邮箱一致的提交邮箱方为有效。
@@ -174,7 +174,7 @@ cd S1/3
 
 ## 📚 参考MACA开源项目仓库
 
-你可以参考以下项目仓库，了解算子开发与提交格式,如果为[github](https://github.com/orgs/MetaX-MACA/repositories)，[gitee](https://gitee.com/organizations/metax-maca/projects)仓库里面的项目提出一个好的Issue可以获得算力券的激励。
+你可以参考以下项目仓库，了解算子开发与提交格式。如果为[GitHub](https://github.com/orgs/MetaX-MACA/repositories)、[Gitee](https://gitee.com/organizations/metax-maca/projects)仓库里面的项目提出一个好的Issue可以获得算力券的激励。
 如：
 - [mcTVM](https://github.com/MetaX-MACA/mcTVM)
 - [FlashMLA](https://github.com/MetaX-MACA/FlashMLA)
