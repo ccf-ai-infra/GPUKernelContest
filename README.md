@@ -135,15 +135,15 @@ cd S1/3
 
 ## 📈 评分机制
 
-每次合并的提交会按以下规则评分：
+每次合并的提交会按以下规则评分,[mcTileLang](https://gitee.com/metax-maca/mcTileLang)详见[mcTilelang](docs/Tilelang/TileLang.md)：
 
 ### 🎯 基础得分（Level）：
 | 等级 | 内容描述 | 分值 |
 |------|----------|------|
-| Level 1 | 优化一个 PyTorch / Paddle 算子 | 5 分 |
-| Level 2 | 融合优化 2~9 个算子 | 10 分 |
-| Level 3 | 含 MMA（多维矩阵乘）融合算子 | 50 分 |
-| Level 4 | 用于大模型推理的复杂融合算子 | 50 分 |
+| Level 1 | 优化一个 PyTorch / Paddle 算子/验证[mcTileLang](https://gitee.com/metax-maca/mcTileLang)的docs文件夹下的文档已有的文档并提交验证结果的截图到对应的issue| 5 分 |
+| Level 2 | 融合优化 2~9 个算子/迁移[mcTileLang](https://gitee.com/metax-maca/mcTileLang)的docs文件夹下的文档已有的与cuda相关的文档到maca，并给对应的文档提交PR | 10 分 |
+| Level 3 | 为[mcTileLang](https://gitee.com/metax-maca/mcTileLang)的docs/deeplearning_operators文件夹下未编写文档的算子提交算子解读的PR/补充和修复已有文档 | 20 分 |
+| Level 4 | 含 MMA（多维矩阵乘）融合算子/用于大模型推理的复杂融合算子/给开源仓库[mcTileLang](https://gitee.com/metax-maca/mcTileLang)提交example文件夹下的代码PR | 50 分 |
 | 合并至MACA开源项目仓库的每个PR | 参考：[mcTVM](https://github.com/metax-maca/mcTVM),[mcTileLang](https://gitee.com/metax-maca/mcTileLang) | 50 分 |
 
 > 注释事项，非AI Infra组下的项目PR需在赛题Issue中提供合并记录，并确保和参赛时使用邮箱一致的提交邮箱方为有效。

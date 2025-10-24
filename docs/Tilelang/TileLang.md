@@ -65,7 +65,7 @@ python3 ./examples/quickstart.py
 
 
 ## 三、生态贡献指南：邀您共建TileLang国产GPU生态
-为持续完善mcTileLang仓库功能、降低开发门槛，诚邀所有开发者参与贡献，重点欢迎**Issue反馈**与**Docs/Example类型PR**，具体指南如下：
+为持续完善mcTileLang仓库功能、降低开发门槛，诚邀所有开发者参与贡献，重点欢迎**Issue反馈**与**Docs/Example类型PR**，评分详见[Task](Task.md)具体指南如下：
 
 ### 1. 积极反馈：提交Issue助力仓库优化
 当您遇到以下场景时，欢迎通过仓库“Issues”模块提交反馈，帮助团队定位问题、明确方向：
