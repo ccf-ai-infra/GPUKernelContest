@@ -5,13 +5,13 @@
 
 ### 2. 解决方案：TileLang的技术突破
 TileLang作为TileLang社区主导的GPU内核领域专用语言，以“高效开发+性能不妥协”为核心，针对性解决行业痛点：
-- **开发效率革命**：采用Python式简洁语法，实现FlashAttention算子仅需80行代码，并保持了与官方版本持平的性能。这种代码量的大幅减少不仅降低了开发门槛，也提高了维护性和可读性。；
-- **分层接口适配**：提供3个层次编程接口，覆盖从初学者到专家的全阶段需求，降低国产GPU开发门槛；
+- **开发效率革命**：采用Python式简洁语法，实现FlashAttention算子仅需80行代码，并保持了与官方版本持平的性能。这种代码量的大幅减少不仅降低了开发门槛，也提高了维护性和可读性。
+- **分层接口适配**：提供3个层次编程接口，覆盖从初学者到专家的全阶段需求，降低国产GPU开发门槛。
 - **多硬件兼容**：已在MACA曦云C500、英伟达H100/A100、AMD MI250/MI300X等多类GPU上验证适配，支持“cuda/hip/cpu”多目标编译，兼容性广泛。
 
 ### 3. 生态协同：MACA与开源社区的落地支持
 为推动TileLang在国产GPU上的实际应用，MACA（国产高性能GPU代表厂商）与开源社区联合行动：
-- **硬件适配**：MACA AI编译器团队和TileLang社区合作已提前参与该项目，探讨MACAGPU与TileLang的适配（开源仓库：[mcTileLang](https://gitee.com/metax-maca/mcTileLang)），通过MXMACA软件栈实现深度协同，核心算子性能接近国际主流产品。
+- **硬件适配**：MACA AI编译器团队和TileLang社区合作已提前参与该项目，探讨MACA GPU与TileLang的适配（开源仓库：[mcTileLang](https://gitee.com/metax-maca/mcTileLang)），通过MXMACA软件栈实现深度协同，核心算子性能接近国际主流产品。
 - **在线环境搭建**：在模力方舟平台提供预配置的TileLang在线体验环境，开发者无需自行搭建硬件，直接基于曦云C500（64GB显存、Intel Xeon Gold 6530）来进行开发；
 - **资源支持**：提供专属算力券降低体验成本，同时开源完整适配代码与文档，助力生态共建。
 
@@ -21,7 +21,7 @@ TileLang作为TileLang社区主导的GPU内核领域专用语言，以“高效�
 ## 二、快速上手：TileLang 国产 GPU 开发实践
 ### 1. 环境准备：获取TileLang在线开发资源
 #### 步骤1：进入模力方舟算力市场
-访问[模力方舟](https://ai.gitee.com/compute), 点击顶部导航栏“算力市场”，进入MACAGPU资源租用页面。
+访问[模力方舟](https://ai.gitee.com/compute)，点击顶部导航栏“算力市场”，进入MACA GPU资源租用页面。
 
 #### 步骤2：领取TileLang专属算力券
 - 参与比赛活动，领取TileLang专属算力券；
@@ -29,7 +29,7 @@ TileLang作为TileLang社区主导的GPU内核领域专用语言，以“高效�
 
 #### 步骤3：选择TileLang镜像与配置
 - **硬件配置选择**：默认选择“曦云C500”GPU，单卡配置为64GB显存、12核Intel Xeon Gold 6530 CPU
-- **镜像选择**：在“镜像”列表中勾选“基础镜像”下的“TileLang 0.1.5 
+- **镜像选择**：在“镜像”列表中勾选“基础镜像”下的“TileLang 0.1.5”
 - **计费方式**：支持按量收费、包日/包周/包月。
 
 ### 2. 容器启动与TileLang验证
@@ -58,14 +58,14 @@ python3 ./examples/quickstart.py
 访问MACA开源项目文档，获取算子开发教程与API说明。
 
 #### 步骤2：尝试核心算子开发
-基于示例代码修改，开发自定义GPU算子（如简化版GEMM算子））。
+基于示例代码修改，开发自定义GPU算子（如简化版GEMM算子）。
 
 #### 步骤3：参与生态贡献
 若开发的算子具备通用性，可通过[gitee](https://gitee.com/metax-maca/mcTileLang)提交PR参与TileLang国产GPU生态共建。
 
 
 ## 三、生态贡献指南：邀您共建TileLang国产GPU生态
-为持续完善mcTileLang仓库功能、降低开发门槛，诚邀所有开发者参与贡献，重点欢迎**Issue反馈**与**Docs/Example类型PR**，具体指南如下：
+为持续完善mcTileLang仓库功能、降低开发门槛，诚邀所有开发者参与贡献，重点欢迎**Issue反馈**与**Docs/Example类型PR**，评分详见[Task](Task.md)具体指南如下：
 
 ### 1. 积极反馈：提交Issue助力仓库优化
 当您遇到以下场景时，欢迎通过仓库“Issues”模块提交反馈，帮助团队定位问题、明确方向：
@@ -80,14 +80,14 @@ python3 ./examples/quickstart.py
 mcTileLang仓库的`docs`（文档）与`examples`（示例）目录是生态核心组成部分，尤其欢迎以下类型PR，共建更易用的开发资源：
 
 #### （1）Docs类型PR：完善文档体系
-- **教程迁移**：将已有的基于cuda的教程文档迁移到metax上
-- **新增教程**：补充“TileLang布局优化实战”“MACAGPU性能调优指南”等进阶教程；
+- **教程迁移**：将已有的基于CUDA的教程文档迁移到MACA上
+- **新增教程**：补充“TileLang布局优化实战”“MACA GPU性能调优指南”等进阶教程；
 - **更新说明**：同步API变更（如新增的接口）、修正安装步骤中的过时信息；
 - **补充案例**：在文档中添加“常见问题排查”（如容器启动失败、编译报错解决）。
 
 #### （2）Example类型PR：丰富算子示例
 - **新增算子**：提交RetNet、Mamba等新兴模型的TileLang实现，或补充现有算子的优化版本（如支持不同精度或者混合精度的算子）；
-- **硬件适配**：提供算子在GPU（如曦云C500）上的适配示例与性能分析。
+- **硬件适配**：提供算子在GPU（如曦云C500）上的适配示例与性能分析
 
 #### （3）PR提交流程
 1. Fork mcTileLang仓库到个人账号；
