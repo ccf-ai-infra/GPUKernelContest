@@ -4,13 +4,19 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
+#include <thrust/device_vector.h>
+#include <thrust/copy.h>
+#include <mc_runtime.h>   
+
+#include <thrust/device_ptr.h>
+
 
 
 // ============================================================================
 // 实现标记宏 - 参赛者修改实现时请将此宏设为0
 // ============================================================================
 #ifndef USE_DEFAULT_REF_IMPL
-#define USE_DEFAULT_REF_IMPL 1  // 1=默认实现, 0=参赛者自定义实现
+#define USE_DEFAULT_REF_IMPL 0  // 1=默认实现, 0=参赛者自定义实现
 #endif
 
 #if USE_DEFAULT_REF_IMPL
@@ -27,10 +33,102 @@ constexpr double REDUCE_ERROR_TOLERANCE = 0.005; // 0.5%
 // ReduceSum算法实现接口
 // 参赛者需要替换Thrust实现为自己的高性能kernel
 // ============================================================================
+template <typename InputT, typename OutputT>
+class ReduceSumAlgorithm;
+
+//归约核函数
+template <typename T>
+__global__ void reduce_sum(const T* __restrict__ input, T* __restrict__ output, int num_items) {
+    extern __shared__ T s_mem[];
+    
+    int tid = threadIdx.x;
+    int idx = blockIdx.x * blockDim.x * 2 + threadIdx.x;
+    
+    T sum = static_cast<T>(0);
+    
+    // 每个线程处理2个元素
+    if (idx < num_items) {
+        sum += input[idx];
+    }
+    if (idx + blockDim.x < num_items) {
+        sum += input[idx + blockDim.x];
+    }
+    
+    s_mem[tid] = sum;
+    __syncthreads();
+    
+    // 进行归约
+    for (int s = blockDim.x / 2; s > 32; s >>= 1) {
+        if (tid < s) {
+            s_mem[tid] += s_mem[tid + s];
+        }
+        __syncthreads();
+    }
+    
+    // 最后的warp内的手动归约
+    if (tid < 32) {
+        volatile T* temp = s_mem;
+        temp[tid] += temp[tid + 32];
+        temp[tid] += temp[tid + 16];
+        temp[tid] += temp[tid + 8];
+        temp[tid] += temp[tid + 4];
+        temp[tid] += temp[tid + 2];
+        temp[tid] += temp[tid + 1];
+    }
+    
+    // 写入结果
+    if (tid == 0) {
+        output[blockIdx.x] = s_mem[0];
+    }
+}
+
+
+
+// 多块归约的最后一步
+template <typename T>
+__global__ void final_reduce(const T* __restrict__ temp_sums, T* __restrict__ final_result, int num_blocks, T init_value) {
+    extern __shared__ T s_mem[];
+    
+    int tid = threadIdx.x;
+    
+    T sum = (tid < num_blocks) ? temp_sums[tid] : static_cast<T>(0);
+    
+    s_mem[tid] = sum;
+    __syncthreads();
+    
+    // 在共享内存中进行归约
+    for (int s = blockDim.x / 2; s > 0; s >>= 1) {
+        if (tid < s) {
+            s_mem[tid] += s_mem[tid + s];
+        }
+        __syncthreads();
+    }
+    
+    // 写入最终结果
+    if (tid == 0) {
+        *final_result = s_mem[0] + init_value;
+    }
+}
+
 
 template <typename InputT = float, typename OutputT = float>
 class ReduceSumAlgorithm {
 public:
+
+    ReduceSumAlgorithm() {
+        buffer = nullptr;
+        buffer_size = 0;
+    }
+    
+    ~ReduceSumAlgorithm() {
+        if (buffer != nullptr) {
+            mcFree(buffer);
+            buffer = nullptr;
+            buffer_size = 0;
+        }
+    }
+
+
     // 主要接口函数 - 参赛者需要实现这个函数
     void reduce(const InputT* d_in, OutputT* d_out, int num_items, OutputT init_value) {
         
@@ -44,6 +142,57 @@ public:
         // 示例：参赛者可以调用1个或多个自定义kernel
         // blockReduceKernel<<<grid, block>>>(d_in, temp_results, num_items, init_value);
         // finalReduceKernel<<<1, block>>>(temp_results, d_out, grid.x);
+                       
+        if (num_items == 0) {
+            // 处理空输入情况
+            MACA_CHECK(mcMemcpy(d_out, &init_value, sizeof(OutputT), mcMemcpyHostToDevice));
+            return;
+        }
+        else {
+            const int block_size = 256;
+            const int s_num = 2;//每个线程需要处理的数量
+            int grid_size = (num_items + block_size * s_num - 1) / (block_size * s_num);
+            
+            // 限制大小
+            if (grid_size > 1024) {
+                grid_size = 1024;
+            }
+            
+            // 防止需要更大的缓冲区
+            if (grid_size > buffer_size) {
+                if (buffer != nullptr) {
+                    mcFree(buffer);
+                }
+                MACA_CHECK(mcMalloc(&buffer, grid_size * sizeof(OutputT)));
+                buffer_size = grid_size;
+            }
+            
+            // 第一步
+            size_t s_mem_size = block_size * sizeof(OutputT);
+            reduce_sum<OutputT><<<grid_size, block_size, s_mem_size>>>(reinterpret_cast<const OutputT*>(d_in), buffer, num_items);
+            
+            // 第二步
+            if (grid_size == 1) {
+                // 如果只有一个块，直接加
+                OutputT temp;
+                MACA_CHECK(mcMemcpy(&temp, buffer, sizeof(OutputT), mcMemcpyDeviceToHost));
+                temp += init_value;
+                MACA_CHECK(mcMemcpy(d_out, &temp, sizeof(OutputT), mcMemcpyHostToDevice));
+            } else {
+                // 如果还有多块，要继续归约
+                int final_block_size = 256;
+                if (grid_size < final_block_size) {
+                    final_block_size = (grid_size < 32) ? 32 : 
+                                      (grid_size < 64) ? 64 :  
+                                      (grid_size < 128) ? 128 : 256;
+                }
+                
+                final_reduce<OutputT><<<1, final_block_size, final_block_size * sizeof(OutputT)>>>(buffer, d_out, grid_size, init_value);
+            }
+        }
+        
+        MACA_CHECK(mcDeviceSynchronize()); 
+
 #else
         // ========================================
         // 默认基准实现
@@ -73,6 +222,12 @@ public:
 private:
     // 参赛者可以在这里添加辅助函数和成员变量
     // 例如：中间结果缓冲区、多阶段归约等
+     OutputT* buffer;      // 指向部分和缓冲区
+    int buffer_size;      // 缓冲区当前大小
+
+    ReduceSumAlgorithm(const ReduceSumAlgorithm&) = delete;
+    ReduceSumAlgorithm& operator=(const ReduceSumAlgorithm&) = delete;
+
 };
 
 // ============================================================================
