@@ -1,181 +1,210 @@
-# 子赛题三、GPU 算子优化挑战赛
+# 春节不摆烂 · TileLang 算力入门挑战
 
-欢迎参加 **GPU 算子优化挑战赛** 🎯！  
-本比赛旨在通过优化深度学习框架中的核心计算模块，提升大模型的运行效率。在本仓库中，你可以提交你的优化代码、测试样例和使用说明。
+欢迎参加 **TileLang 算力入门挑战**！
 
----
-
-## 🧠 比赛背景简介
-
-随着大语言模型（LLM, 如 ChatGPT 等）的广泛使用，其在运行推理时对计算资源的要求越来越高，出现了所谓的 “三高” 问题：
-
-- **高延迟**：响应慢
-- **高显存占用**：消耗大量显存
-- **高生态依赖**：对系统和软件依赖复杂
-
-本次挑战赛正是为了解决这些问题，鼓励选手**优化 GPU 上的底层算子（即最基础的数学运算模块）**，提高模型推理效率。
+本活动是沐曦股份联合 TileAI 技术社区推出的春节技术活动，旨在帮助 AI 开发者、学生及技术爱好者在春节期间入门 GPU 算子优化，掌握 TileLang 这一强大的深度学习编译器。
 
 ---
 
-## 🔧 挑战方向
+## 活动简介
 
-本次挑战主要有两个技术方向：
+春节，是技术宅一年中最容易摆烂、也最容易偷偷变强的时间。
 
-### Test Time Scaling 算子优化  
-- 对深度学习框架中的基础算子（如 PyTorch 或 PaddlePaddle 中的矩阵乘法）进行性能优化。
-- **GEMM（General Matrix Multiplication）** 是大模型中的核心计算操作。  
-- 目标是对其内核（Kernel）进行精细调优，提高执行效率。
+当别人刷短视频、抢红包的时候，总有人在凌晨 pull 模型、跑推理、调参数、看报错。
 
-👉 **项目目标：在不更换硬件的前提下，让推理速度提升 30%！**
+2026 年春节期间，沐曦股份联合 TileAI 技术社区，推出一次真正能上手、真有算力、真能学东西的春节技术活动：
+
+> 不卷 KPI，不讲 PPT，就给你算力 + 课程 + 实操场景。
 
 ---
 
-## 🚀 快速上手
+## 活动时间
 
-本竞赛旨在评估参赛者在GPU并行计算领域的算法优化能力。为了快速让参赛者进入比赛状态，我们提供了三个核心算法的高性能版本参考，供参赛选手不断优化性能：
-- **ReduceSum**: 高精度归约求和
-- **SortPair**: 键值对稳定排序
-- **TopkPair**: 键值对TopK选择
+**2026 年春节假期**
 
-[三个核心算法赛题模板](https://gitlink.org.cn/ccf-ai-infra/GPUKernelContest/tree/main/cp_template)
+- Day 0：活动预热 & 报名
+- Day 1-2：新手快速上手（领算力 + 跑第一个任务）
+- Day 3-9：进阶实操挑战（课程 + 任务解锁）
+- Day 10：春节技术打卡收官 & 排行榜公布
 
-### 📥 选手赛题准备
+每天 1-2 小时即可参与，不打扰过年。
 
-1. 点击 **[创建赛题](https://gitlink.org.cn/ccf-ai-infra/GPUKernelContest/issues/new)** ，并记录赛题的ID
-2. 算力平台启动一个MACA3.0.0.4+PyTorch2.4.0的容器算力，详细步骤参考： **[算力平台使用说明](https://ai.gitee.com/docs/compute/container)**
-3. 用ssh或者vscode进入容器环境，Clone自己Fork的仓库
-   ```bash
-   git clone https://gitlink.com/gitlinkuseid/GPUKernelContest.git
-   ```
-   > 备注：`gitlinkuseid` 替换为您的URL。
-4. 进入参赛项目，创建以赛题ID为名称的目录。例如：[赛题3](https://gitlink.org.cn/ccf-ai-infra/GPUKernelContest/issues/3)
-   ```bash
-   # 进入Clone的仓库
-   cd GPUKernelContest
-   # 创建以赛题ID为名称的目录
-   mkdir -p S1/3
-   ```
-   ```
-   # 创建后的目录结构如下:
-   GPUKernelContest
-   ├── cp_template(说明：赛目模板目录)
-   ├── S1(说明：第一季比赛名)
-   │   ├── 3(说明：以自己创建赛题ID命名目录存放自己需要提交的内容)
-   ```
-4. Fork仓库并初始化比赛环境（三个核心算法题优化赛题以外自定义的赛题需有入口run.sh脚本，供CI自动测试验证）
-   1. 拷贝赛题样例`cp_template`到赛题`3`目录
-   ```bash
-   # cp -r cp_template/* S1/3
-   ```
-   2. 拷贝后的目录结构如下：
-   ```
-   ├── S1(说明：第一季比赛名)
-   │   ├── 3(说明：以自己创建赛题ID命名目录存放自己需要提交的内容)
-   |   |   ├── utils
-   │   |   ├── reduce_sum_algorithm.maca
-   │   |   ├── run.sh（说明：作为CI自动测试验证的入口）
-   |   |   └── sort_pair_algorithm.maca
-   |   |   └── topk_pair_algorithm.maca
-   │   └── ……
-        ```
+---
 
-### 编译和测试
+## 参与对象
 
-选手赛题目录内提供了编译、测试的脚本，供选手熟悉比赛环境，步骤如下：
+- AI / ML / Infra 工程师
+- 在校学生（计算机 / 人工智能相关专业）
+- 技术宅 / 开源爱好者
+- 想趁春节低成本入门 AI Infra / 大模型的新人
+
+**不要求基础很强，但要求：愿意动手。**
+
+---
+
+## 三大任务方向
+
+本活动主要分为三个任务方向，完成任意方向即可获得算力奖励：
+
+### 任务一：mcTileLang 源码安装
+
+完成 mcTileLang 源码编译安装，理解 TileLang 核心架构。
+
+**目标：**
+- 成功编译安装 mcTileLang
+- 运行示例代码验证安装
+- 提交安装过程中遇到的问题与解决方案（如果有）
+
+**详细教程：** [mcTileLang 源码编译教程](./spring_tilelang/docs/mctilelang-install.md)
+
+---
+
+### 任务二：TileLang Puzzle 练习
+
+通过 TileLang Puzzle 练习，掌握 TileLang 编程基础。
+
+**目标：**
+- 完成基础 Puzzle 任务
+- 理解 TileLang 的编程模型
+
+**练习路径：** [tilelang-puzzles](https://github.com/tile-ai/tilelang-puzzles)
+
+
+---
+
+### 任务三：Puzzle 学习文档撰写
+
+整理学习笔记，编写 TileLang 学习文档，分享技术心得。
+
+**目标：**
+- 整理 Puzzle 练习过程中的笔记
+- 编写 TileLang 学习文档
+- 分享技术心得与踩坑经历
+
+**提交方式：** 将项目提交到 `spring_tilelang/submissions/YOUR_ID/` 目录
+
+---
+
+## 算力领取方式
+
+### 基础算力包
+
+报名成功即可领取春节专属基础算力包（100元福利）。
+
+### 进阶算力包
+
+完成指定任务可解锁：
+- 进阶算力包（春节专属：200元福利）
+- 高性能 GPU 限时体验
+
+> 算力不是抽奖，是用行动换的。
+
+---
+
+## 任务等级
+
+### 基础任务
+
+| 等级 | 内容描述 |
+|------|----------|
+| Level 1 | 完成 mcTileLang 源码安装并提交验证截图 |
+| Level 2 | 完成 5 个及以上 TileLang Puzzle 练习 |
+| Level 3 | 提交 TileLang 学习文档 / 每个 Puzzle 一个文档或者学习总结 |
+
+
+## 奖励与福利
+
+### 基础福利（限前50名）
+
+- 春节专属算力包
+- TileAI 社区专属技术徽章
+
+### 进阶奖励（只要你敢，管够）
+
+- 高性能 GPU 算力体验 + TileLang 进阶探索
+- 沐曦 × TileAI 社区联合认证电子证书
+
+### 彩蛋奖励（Top 5 活跃参与者）
+
+- 技术周边（书籍、周边礼物等）
+- 优秀技术分享推荐至社区首页
+
+---
+
+## 快速开始
+
+### 1. Fork 本仓库
+
+点击右上角 Fork 按钮，将本仓库 Fork 到你的账号下。
+
+### 2. Clone 你的仓库
 
 ```bash
-# ！！！注意参赛选手需要根据自己的赛题ID进入自己完成题目的目录！！！！
-cd S1/3
+git clone https://github.com/YOUR_USERNAME/GPUKernelContest.git
+cd GPUKernelContest/spring_tilelang
 ```
 
-#### 1. 编译和运行
-
-编译并运行所有算法测试（默认行为），如下：
-```bash
-./run.sh
-```
-
-单个或几个赛题测试验证，修改`run.sh`脚本，详细如下：
-```bash
-#!/bin/bash
-
-# 单个赛题测试验证(ReduceSum算法)
-./build_and_run.sh --run_reduce
-```
-
-编译运行单个ReduceSum测试如下：
-```bash
-./run.sh  # ReduceSum算法
-```
-
-#### 2. 手动运行测试
+### 3. 创建你的任务目录
 
 ```bash
-# 仅编译所有算法，不运行测试
-./build_and_run.sh --build-only
-
-# 单个运行不同算法的测试
-./build/test_reducesum [correctness|performance|all]
-./build/test_sortpair [correctness|performance|all]
-./build/test_topkpair [correctness|performance|all]
+# 以你的 GitHub ID 创建目录
+mkdir -p spring_tilelang/submissions/YOUR_ID
+cd spring_tilelang/submissions/YOUR_ID
 ```
 
-对于如何提交可参考：[如何贡献](https://gitlink.org.cn/ccf-ai-infra/GPUKernelContest/tree/main/how-to-contribute.md)
+### 4. 开始任务
 
-### ✅ 参赛要求：
-- 提交内容必须可以在MACA软件上运行。
-- 所提交的优化代码将由主办方审核，**需成功合并（Merge）到赛事官方仓库，才算有效提交。**
+根据上述三大任务方向，选择你感兴趣的任务开始：
 
-### 📦 提交内容包含：
-- 算子优化后的代码
-- 可运行的测试用例
-- 使用说明文档
+- [任务一：mcTileLang 源码安装](./spring_tilelang/docs/mctilelang-install.md)
+- [任务二：TileLang Puzzle 练习](./spring_tilelang/docs/tilelang-puzzle.md)
+- [任务三：学习文档撰写](./spring_tilelang/docs/writing-guide.md)
 
 ---
 
-## 📈 评分机制
+## 提交规范
 
-每次合并的提交会按以下规则评分，[mcTileLang](https://gitee.com/metax-maca/mcTileLang)详见[mcTileLang](docs/Tilelang/TileLang.md)：
+### 提交内容包含
 
-### 🎯 基础得分（Level）：
-| 等级 | 内容描述 | 分值 |
-|------|----------|------|
-| Level 1 | 优化一个 PyTorch或Paddle 算子 / 验证[mcTileLang](https://gitee.com/metax-maca/mcTileLang)的docs文件夹下的文档并提交验证结果的截图到对应的issue | 5 分 |
-| Level 2 | 融合优化 2~9 个算子 / 迁移[mcTileLang](https://gitee.com/metax-maca/mcTileLang)的docs文件夹下的文档已有的与CUDA相关的文档到MACA，并给对应的文档提交PR | 10 分 |
-| Level 3 | 为[mcTileLang](https://gitee.com/metax-maca/mcTileLang)的docs/deeplearning_operators文件夹下未编写文档的算子提交算子解读的PR/补充和修复已有文档 | 20 分 |
-| Level 4 | 含 MMA（多维矩阵乘）融合算子 / 用于大模型推理的复杂融合算子 / 给开源仓库[mcTileLang](https://gitee.com/metax-maca/mcTileLang)提交example文件夹下的代码PR | 50 分 |
-| 合并至MACA开源项目仓库的每个PR | 参考：[mcTVM](https://github.com/metax-maca/mcTVM),[mcTileLang](https://gitee.com/metax-maca/mcTileLang) | 50 分 |
+- 任务完成代码 / 文档
+- 运行截图或验证结果
+- 使用说明文档（README.md）
 
-> 注释事项，非AI Infra组下的项目PR需在赛题Issue中提供合并记录，并确保和参赛时使用邮箱一致的提交邮箱方为有效。
+### 提交方式
 
-### ✨ 加分项：
-| 内容 | 分值 |
-|------|------|
-| 代码规范、清晰 | +10 分 |
-| 性能优化明显 | +10 分 |
-| 记录优化过程、说明模型来源 | +20 分 |
-| 使用 LLM Prompt 自动生成代码及样例 | +20 分 |
+1. 在你的 Fork 仓库中完成修改
+2. 提交 Pull Request 到本仓库
+3. PR 标题格式：`[SpringTileLang] GitHubID - 任务名称`
+4. PR 描述中说明完成的任务内容和得分项
 
-**注意：** 加分项只针对于在基础得分相同的情况下通过加分项来区分不同的排名和后续优秀选手的参考。
+### 提交示例
 
----
+```
+[SpringTileLang] alice - mcTileLang 源码安装 + 5个Puzzle
 
-## 🏆 排名机制
-
-1. 评委评分从高到低排序
-2. **评估规则：** 取前 12 名作为最终获奖选手
-3. 若基础得分相同：
-  - 加分项多者优先
-  - 提交数量多者优先
-  - 提交时间早者优先
-4. 当同一参赛选手在本赛题有多个赛题的提交时，多个赛题计算累计得分
+完成任务：
+- [x] mcTileLang 源码安装（Level 1）
+- [x] TileLang Puzzle 练习（Level 2）
+  - copy
+  - conv
+```
 
 ---
 
-## 📚 参考MACA开源项目仓库
+## 参考资源
 
-你可以参考以下项目仓库，了解算子开发与提交格式。如果为[GitHub](https://github.com/orgs/MetaX-MACA/repositories)、[Gitee](https://gitee.com/organizations/metax-maca/projects)仓库里面的项目提出一个好的Issue可以获得算力券的激励。
-如：
+### mcTileLang 相关
+
+- [mcTileLang 仓库](https://gitee.com/metax-maca/mcTileLang)
+- [mcTileLang 文档](https://gitee.com/metax-maca/mcTileLang/tree/main/docs)
+- [TileLang 官方仓库](https://github.com/tile-ai/tilelang)
+
+### TileLang Puzzle
+
+- [tilelang-puzzles 仓库](https://github.com/tile-ai/tilelang-puzzles)
+
+### MACA 开源项目
+
 - [mcTVM](https://github.com/MetaX-MACA/mcTVM)
 - [FlashMLA](https://github.com/MetaX-MACA/FlashMLA)
 - [mcEigen](https://github.com/MetaX-MACA/mcEigen)
@@ -183,20 +212,22 @@ cd S1/3
 
 ---
 
-## 💡 术语解释
 
-- **算子（Operator）**：指深度学习框架中的基本计算模块，例如矩阵乘法、卷积等。
-- **GEMM**：全称 General Matrix Multiplication，一种用于矩阵计算的核心算法，是大模型中的基础运算。
-- **MMA**：Matrix Multiply-Accumulate，多维矩阵乘加运算，适用于复杂计算加速。
-- **LLM**：Large Language Model，大语言模型，如 GPT、BERT 等。
-- **推理（Inference）**：模型训练完成后，用来“预测”或“使用”的过程。
-- **Prompt**：用于引导大模型生成特定内容的输入提示词。
-- **PR（Pull Request）**：在 Git 仓库中提交你的修改请求，供维护者审查后合并。
+
+## 联系与帮助
+
+如需帮助或有疑问，请：
+
+1. 在本仓库发起 Issue
+2. 加入 TileAI 社区 微信群
+3. 联系活动主办方
 
 ---
 
-## 📬 联系与帮助
+## 活动总结
 
-如需帮助或有疑问，请联系主办方或在项目中发起 Issue。
+> **这是一次不讲虚话的春节技术活动，**
+> **算力是真的，课程是能跑的，**
+> **参与的人，是真的能学到东西的。**
 
-祝你挑战顺利，优化出更快的大模型推理体验！🚀
+祝你春节不摆烂，用算力换成长！
