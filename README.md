@@ -218,7 +218,7 @@ cd spring_tilelang/submissions/YOUR_ID
 
 1. 在本仓库发起 Issue
 2. 加入 TileLang 微信群
-![TileLang_Group](./tilelang_group.png){:width="300"}
+<img src="./tilelang_group.png" alt="TileLang群" width="300" height="300">
 3. 联系活动主办方
 
 ---
