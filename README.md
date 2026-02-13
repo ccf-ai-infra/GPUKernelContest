@@ -117,12 +117,10 @@
 ### 基础福利（限前50名）
 
 - 春节专属算力包
-- TileAI 社区专属技术徽章
-
+                             
 ### 进阶奖励（只要你敢，管够）
 
 - 高性能 GPU 算力体验 + TileLang 进阶探索
-- 沐曦 × TileAI 社区联合认证电子证书
 
 ### 彩蛋奖励（Top 5 活跃参与者）
 
@@ -140,14 +138,14 @@
 ### 2. Clone 你的仓库
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/GPUKernelContest.git
+git clone https://gitlink.org.cn/YOUR_USERNAME/GPUKernelContest.git
 cd GPUKernelContest/spring_tilelang
 ```
 
 ### 3. 创建你的任务目录
 
 ```bash
-# 以你的 GitHub ID 创建目录
+# 以你的 Gitlink ID 创建目录
 mkdir -p spring_tilelang/submissions/YOUR_ID
 cd spring_tilelang/submissions/YOUR_ID
 ```
@@ -174,7 +172,7 @@ cd spring_tilelang/submissions/YOUR_ID
 
 1. 在你的 Fork 仓库中完成修改
 2. 提交 Pull Request 到本仓库
-3. PR 标题格式：`[SpringTileLang] GitHubID - 任务名称`
+3. PR 标题格式：`[SpringTileLang] Gitlink ID - 任务名称`
 4. PR 描述中说明完成的任务内容和得分项
 
 ### 提交示例
@@ -219,7 +217,8 @@ cd spring_tilelang/submissions/YOUR_ID
 如需帮助或有疑问，请：
 
 1. 在本仓库发起 Issue
-2. 加入 TileAI 社区 微信群
+2. 加入 TileLang 微信群
+![TileLang_Group](./image.png)
 3. 联系活动主办方
 
 ---
