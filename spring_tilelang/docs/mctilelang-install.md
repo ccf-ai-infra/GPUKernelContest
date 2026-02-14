@@ -59,6 +59,20 @@ cd mcTileLang
 git submodule update --init --recursive
 ```
 
+> 因为众所周知的原因访问github会比较缓慢，大家如失败可以多尝试几次，实在不行可参考如下方式配置一下 `.gitmodules` 从mirror的仓库下载submodule。
+> cat .gitmodules
+```
+[submodule "3rdparty/cutlass"]
+        path = 3rdparty/cutlass
+        url = https://gitee.com/topshare_test/cutlass.git
+[submodule "3rdparty/tvm"]
+        path = 3rdparty/tvm
+        url = https://gitee.com/topshare_test/tvm.git
+[submodule "3rdparty/composable_kernel"]
+        path = 3rdparty/composable_kernel
+        url = https://gitee.com/topshare_test/composable_kernel.git
+```
+
 ### 2.3 配置 git（首次使用需要）
 
 ```bash
