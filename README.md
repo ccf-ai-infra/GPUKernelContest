@@ -18,6 +18,13 @@
 
 ---
 
+## 参与方式
+
+- 注册[沐曦开发者社区](https://external-sso.metax-tech.com/login?app_id=6840fb74b3b5d7665dcc0425&protocol=oidc&finish_login_url=%2Finteraction%2Foidc%2F475b38c5-7fb0-47e7-8258-16e945b83c79%2Flogin&login_page_context=)
+- 报名活动[领取算力券](https://developer.metax-tech.com/activities/2)
+
+---
+
 ## 活动时间
 
 **2026 年春节假期**
