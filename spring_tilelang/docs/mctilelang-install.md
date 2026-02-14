@@ -59,8 +59,8 @@ cd mcTileLang
 git submodule update --init --recursive
 ```
 
-> 因为众所周知的原因访问github会比较缓慢，大家如失败可以多尝试几次，实在不行可参考如下方式配置一下 `.gitmodules` 从mirror的仓库下载submodule。
-> cat .gitmodules
+> 因为众所周知的原因访问github会比较缓慢，大家如失败可以多尝试几次，实在不行可参考如下方式配置一下 `.gitmodules` 并从gitee的mirror仓库下载所需的submodule。
+
 ```
 [submodule "3rdparty/cutlass"]
         path = 3rdparty/cutlass
@@ -119,8 +119,10 @@ export PYTHONPATH=/path/to/mcTileLang
 将 `/path/to/mcTileLang` 替换为实际的 mcTileLang 路径，例如：
 
 ```bash
-export PYTHONPATH=/root/mcTileLang
+export PYTHONPATH=/root/mcTileLang:.
 ```
+
+> **注意**：有时候可能需要在路径后加上 `:.` 来确保当前目录也在 Python 的搜索路径中。
 
 ### 3.2 验证导入
 
